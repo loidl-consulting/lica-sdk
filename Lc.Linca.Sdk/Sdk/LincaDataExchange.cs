@@ -224,6 +224,58 @@ public static class LincaDataExchange
     }
 
     /// <summary>
+    /// Get audit events for successful create and delete requests
+    /// </summary>
+    public static (Bundle results, bool canCue) GetAuditEventsCreate(LincaConnection connection, DateTime? from, DateTime? thru)
+    {
+        string operationQuery = CreateOperationQuery(LincaEndpoints.audit_events_create, from, thru);
+        (Bundle auditEvents, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (auditEvents, true);
+        }
+
+        return (new(), false);
+    }
+
+    /// <summary>
+    /// Get audit events for successful create and delete requests
+    /// </summary>
+    public static (Bundle results, bool canCue) GetAuditEventsError(LincaConnection connection, DateTime? from, DateTime? thru)
+    {
+        string operationQuery = CreateOperationQuery(LincaEndpoints.audit_events_error, from, thru);
+        (Bundle auditEvents, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (auditEvents, true);
+        }
+
+        return (new(), false);
+    }
+
+    private static string CreateOperationQuery(string operation, DateTime? from, DateTime? thru)
+    {
+        string operationQuery = $"{operation}";
+
+        if (from != null && thru != null)
+        {
+            operationQuery += $"?from={from}&thru={thru}";
+        }
+        else if (from != null)
+        {
+            operationQuery += $"?from={from}";
+        }
+        else if (thru != null)
+        {
+            operationQuery += $"?thru={thru}";
+        }
+
+        return operationQuery ;
+    }
+
+    /// <summary>
     /// This is for testing purposes only
     /// </summary>
     public static (Patient created, bool canCue, OperationOutcome? outcome) PostPatientToProposalMedicationRequest(LincaConnection connection, Patient patient)

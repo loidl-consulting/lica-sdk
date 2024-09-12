@@ -11,6 +11,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Utility;
+using System.Xml.Serialization;
 
 namespace Lc.Linca.Sdk;
 
@@ -144,6 +145,23 @@ public static class BundleHelper
             {
                 Console.WriteLine($"Proposal Id: {item.Id} --> is a starting link");
             }
+        }
+    }
+
+    public static void PrintAuditEvents(Bundle auditEvents)
+    {
+        List<AuditEvent> ae = new();
+
+        foreach (var item in auditEvents.Entry)
+        {
+            ae.Add((item.Resource as AuditEvent)!);
+        }
+
+        foreach (var item in ae)
+        {
+            Console.WriteLine($"Recorded: {item.Recorded}" +
+                $"\tRequested by: {item.Agent.First().Who.Identifier.Value}" +
+                $"\tDetails: {item.Outcome.Detail.First().Text}");
         }
     }
 }

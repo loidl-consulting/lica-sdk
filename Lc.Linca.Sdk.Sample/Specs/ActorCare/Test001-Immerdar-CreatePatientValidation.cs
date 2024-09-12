@@ -37,7 +37,9 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             new("Create client record: LCVAL05 gender missing", ClientRecordErrorLCVAL05),
             new("Create client record: multiple LCVALS send empty Patient resource", ClientRecordErrorLCVALMultiple),
             new("Create client record with success", CreateClientRecord),
-            new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06)
+            new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06),
+            new("Get AuditEvents for successful create request", GetAuditEventsCreate),
+            new("Get AuditEvents for erroneous requests", GetAuditEventsError)
         };
     }
 
@@ -318,5 +320,29 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
         }
 
         return OutcomeHelper.PrintOutcomeAndCheckLCVAL(outcome, "LCVAL06");
+    }
+
+    private bool GetAuditEventsCreate()
+    {
+        (var ae, var canCue) = LincaDataExchange.GetAuditEventsCreate(Connection, null, null);
+
+        if (ae != null)
+        {
+            BundleHelper.PrintAuditEvents(ae);
+        }
+
+        return canCue;
+    }
+
+    private bool GetAuditEventsError()
+    {
+        (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, null, null);
+
+        if (ae != null)
+        {
+            BundleHelper.PrintAuditEvents(ae);
+        }
+
+        return canCue;
     }
 }

@@ -91,6 +91,18 @@ public static class LincaEndpoints
     public const string patient_initial_prescriptions = "$patient-initial-prescriptions";
 
     /// <summary>
+    /// The name of the operation to GET AuditEvents of successful create and delete requests
+    /// can only be queried with a special admin certificate
+    /// </summary>
+    public const string audit_events_create = "$audit-events-create";
+
+    /// <summary>
+    /// The name of the operation to GET AuditEvents of erroneous requests
+    /// can only be queried with a special admin certificate
+    /// </summary>
+    public const string audit_events_error = "$audit-events-error";
+
+    /// <summary>
     /// Get the profiled name of a standard Fhir resource
     /// </summary>
     public static string GetProfiledResourceName(this Resource resource)
