@@ -10,6 +10,7 @@
  ***********************************************************************************/
 
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 using Hl7.Fhir.Utility;
 using System.Xml.Serialization;
 
@@ -159,9 +160,24 @@ public static class BundleHelper
 
         foreach (var item in ae)
         {
-            Console.WriteLine($"Recorded: {item.Recorded}" +
+            Console.WriteLine($"Event record time: {item.Recorded}" +
                 $"\tRequested by: {item.Agent.First().Who.Identifier.Value}" +
                 $"\tDetails: {item.Outcome.Detail.First().Text}");
+
+            if (item.Contained != null && item.Contained.Count > 0)
+            {
+                foreach (var oo in item.Contained)
+                {
+                    if (oo is OperationOutcome outcome)
+                    {
+                        foreach (var issue in outcome.Issue)
+                        {
+                            Console.WriteLine($"Issue \tSeverity: {issue.Severity?.ToString()} \tErrortype: {issue.Code} \tErrorcode: {issue.Details.Coding.First().Code} \t{issue.Details.Text}");
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("");
         }
     }
 }

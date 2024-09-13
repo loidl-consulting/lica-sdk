@@ -226,7 +226,7 @@ public static class LincaDataExchange
     /// <summary>
     /// Get audit events for successful create and delete requests
     /// </summary>
-    public static (Bundle results, bool canCue) GetAuditEventsCreate(LincaConnection connection, DateTime? from, DateTime? thru)
+    public static (Bundle results, bool canCue) GetAuditEventsCreate(LincaConnection connection, string? from, string? thru)
     {
         string operationQuery = CreateOperationQuery(LincaEndpoints.audit_events_create, from, thru);
         (Bundle auditEvents, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
@@ -242,7 +242,7 @@ public static class LincaDataExchange
     /// <summary>
     /// Get audit events for successful create and delete requests
     /// </summary>
-    public static (Bundle results, bool canCue) GetAuditEventsError(LincaConnection connection, DateTime? from, DateTime? thru)
+    public static (Bundle results, bool canCue) GetAuditEventsError(LincaConnection connection, string? from, string? thru)
     {
         string operationQuery = CreateOperationQuery(LincaEndpoints.audit_events_error, from, thru);
         (Bundle auditEvents, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
@@ -255,19 +255,19 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
-    private static string CreateOperationQuery(string operation, DateTime? from, DateTime? thru)
+    private static string CreateOperationQuery(string operation, string? from, string? thru)
     {
         string operationQuery = $"{operation}";
 
-        if (from != null && thru != null)
+        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(thru))
         {
             operationQuery += $"?from={from}&thru={thru}";
         }
-        else if (from != null)
+        else if (!string.IsNullOrEmpty(from))
         {
             operationQuery += $"?from={from}";
         }
-        else if (thru != null)
+        else if (!string.IsNullOrEmpty(thru))
         {
             operationQuery += $"?thru={thru}";
         }
