@@ -20,7 +20,7 @@ internal static class LinkedCareSampleClient
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    //internal const string FhirServerBaseUrl = "https://fhir5-q.linkedcare.at";
+    //internal const string FhirServerBaseUrl = "https://fhir5-d.linkedcare.at";
     internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     internal static CareInformationSystem CareInformationSystemScaffold = new();

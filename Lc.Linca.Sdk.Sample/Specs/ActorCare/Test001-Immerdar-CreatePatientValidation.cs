@@ -324,8 +324,10 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAuditEventsCreate()
     {
-        //string from = DateTimeOffset.UtcNow.AddDays(-1).Date.ToString("o", CultureInfo.InvariantCulture);
-        (var ae, var canCue) = LincaDataExchange.GetAuditEventsCreate(Connection, null, null);
+        string from = DateTime.UtcNow.AddDays(-5).Date.ToString("o", CultureInfo.InvariantCulture);
+        //string thru = DateTime.UtcNow.AddDays(-2).Date.ToString("o", CultureInfo.InvariantCulture);
+
+        (var ae, var canCue) = LincaDataExchange.GetAuditEventsCreate(Connection, from, null);
 
         if (ae != null)
         {
@@ -338,7 +340,9 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAuditEventsError()
     {
-        (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, null, null);
+        string from = DateTime.UtcNow.AddDays(-4).Date.ToString("o", CultureInfo.InvariantCulture);
+        string thru = DateTime.UtcNow.AddDays(-1).ToString("o", CultureInfo.InvariantCulture);
+        (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, from, thru);
 
         if (ae != null)
         {
