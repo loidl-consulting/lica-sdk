@@ -113,9 +113,9 @@ public static class BundleHelper
             }
         }
 
-        Console.WriteLine($"proposals: {proposals.Count}");
-
-        Console.WriteLine();
+        Console.WriteLine($"Proposals: {proposals.Count}");
+        Console.WriteLine($"Prescriptions: {prescriptions.Count}");
+        Console.WriteLine($"Prescriptions: {dispenses.Count}");
 
         foreach (var item in dispenses)
         {
@@ -156,6 +156,134 @@ public static class BundleHelper
                 Console.WriteLine($"Proposal Id: {item.Id} for {item.Subject.Display} --> is a starting link");
             }
         }
+    }
+
+    public static void PrintOrderSummary(Bundle orderchains)
+    {
+        List<MedicationRequest> initialProposals = new();
+        List<MedicationRequest> basedOnProposals = new();
+        List<MedicationRequest> initialPrescriptions = new();
+        List<MedicationRequest> basedOnPrescriptions = new();
+        List<MedicationDispense> otcDispenses = new();
+        List<MedicationDispense> dispenses = new();
+
+        foreach (var item in orderchains.Entry)
+        {
+            if (item.FullUrl.Contains("LINCAProposal"))
+            {
+                var prop = item.Resource as MedicationRequest;
+
+                if (prop!.BasedOn == null || prop.BasedOn.Count == 0)
+                {
+                    initialProposals.Add(prop);
+                }
+                else
+                {
+                    basedOnProposals.Add(prop);
+                }
+            }
+            else if (item.FullUrl.Contains("LINCAPrescription"))
+            {
+                var presc = item.Resource as MedicationRequest;
+
+                if (presc!.BasedOn == null || presc.BasedOn.Count == 0)
+                {
+                    initialPrescriptions.Add(presc);
+                }
+                else
+                {
+                    basedOnPrescriptions.Add(presc);    
+                }
+            }
+            else if (item.FullUrl.Contains("LINCAMedicationDispense"))
+            {
+                var disp = item.Resource as MedicationDispense;
+
+                if (disp!.AuthorizingPrescription == null || disp.AuthorizingPrescription.Count == 0)
+                {
+                    otcDispenses.Add(disp);
+                }
+                else
+                {
+                    dispenses.Add(disp);
+                }
+            }
+        }
+
+        Console.WriteLine($"{initialProposals.Count} proposals");
+        Console.WriteLine($"{basedOnProposals.Count} changes to proposals");
+        Console.WriteLine($"{basedOnPrescriptions.Count} prescriptions to proposals");
+        Console.WriteLine($"{initialPrescriptions.Count} initial prescripions");
+        Console.WriteLine($"{dispenses.Count} dispenses to prescriptions");
+        Console.WriteLine($"{otcDispenses.Count} otc dispenses");
+
+        initialProposals = initialProposals.OrderBy(p => p.Meta.LastUpdated).ToList();
+
+        foreach (var prop in initialProposals)
+        {
+            Console.WriteLine($"Proposal ID: {prop.Id} Patient: {prop.Subject.Display} " +
+                $"Medication: {prop.Medication.Concept.Coding.First().Code}|{prop.Medication.Concept.Coding.First().Display} " +
+                $"Quantity: {prop.DispenseRequest?.Quantity?.Value} Dosage: {prop.DosageInstruction?.FirstOrDefault()?.Text}");
+
+            var succ = basedOnProposals.FirstOrDefault(p => p.BasedOn.First().Reference.Contains(prop.Id));
+            if (succ != null)
+            {
+                // Proposal was cancelled, updates are not possible in mynevaToGo
+                Console.WriteLine($"Proposal ID: {succ.Id} Status: {succ.Status}");
+                basedOnProposals.Remove(succ);
+            }
+            else
+            {
+                var pres = basedOnPrescriptions.FirstOrDefault(p => p.BasedOn.First().Reference.Contains(prop.Id));
+                if (pres != null)
+                {
+                    Console.WriteLine($"Prescrip ID: {pres.Id} Patient: {pres.Subject.Display} " +
+                        $"Medication: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
+                        $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text}");
+                    basedOnPrescriptions.Remove(pres);
+
+                    var disp = dispenses.FindAll(d => d.AuthorizingPrescription.First().Reference == pres.Id);
+                    if (disp.Any())
+                    {
+                        foreach (var d in  disp)
+                        {
+                            Console.WriteLine($"Dispense ID: {d.Id} Patient: {d.Subject.Display} " +
+                                $"Medication: {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
+                                $"Quantity: {d.Quantity.Value} Dosage: {d.DosageInstruction.First().Text} " +
+                                $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
+                        }
+                        dispenses.RemoveAll(d => d.AuthorizingPrescription.First().Reference == pres.Id);
+                    }
+                }
+            }
+            Console.WriteLine("---------------------------------------------------------------------");
+        }
+
+        if (initialPrescriptions.Any())
+        {
+            Console.WriteLine("ATTENTION INITÌAL PRESCRIPTIONS FOUND");
+            foreach (var pres in initialPrescriptions)
+            {
+                Console.WriteLine($"Prescrip ID: {pres.Id} Patient: {pres.Subject.Display} " +
+                    $"Medication: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
+                    $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text}");
+            }
+            Console.WriteLine("---------------------------------------------------------------------");
+        }
+
+        if( otcDispenses.Any() )
+        {
+            Console.WriteLine("ATTENTION OTC DISPENSES FOUND");
+            foreach (var d in otcDispenses)
+            {
+                Console.WriteLine($"Dispense ID: {d.Id} Patient: {d.Subject.Display} " +
+                    $"Medication: {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
+                    $"Quantity: {d.Quantity.Value} Dosage: {d.DosageInstruction.First().Text} " +
+                    $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
+            }
+            Console.WriteLine("---------------------------------------------------------------------");
+        }
+
     }
 
     public static void PrintAuditEvents(Bundle auditEvents)

@@ -356,12 +356,12 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAllOrderChains()
     {
-        string from = DateTime.UtcNow.AddHours(-5).ToString("o", CultureInfo.InvariantCulture);
+        string from = DateTime.UtcNow.AddDays(-10).ToString("o", CultureInfo.InvariantCulture);
         (var result, var canCue) = LincaDataExchange.GetAllOrderChains(Connection, from);
 
         if (result != null)
         {
-            BundleHelper.ShowOrderChains(result);
+            BundleHelper.PrintOrderSummary(result);
         }
 
         return canCue;
