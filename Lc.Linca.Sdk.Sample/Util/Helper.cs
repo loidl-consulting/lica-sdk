@@ -113,26 +113,35 @@ public static class BundleHelper
             }
         }
 
+        Console.WriteLine($"proposals: {proposals.Count}");
+
         Console.WriteLine();
 
         foreach (var item in dispenses)
         {
-            Console.WriteLine($"Dispense Id: {item.Id} --> authorizingPrescription: {item.AuthorizingPrescription.First().Reference}");
+            if (item.AuthorizingPrescription.Count == 1)
+            {
+                Console.WriteLine($"Dispense Id: {item.Id} for {item.Subject.Display} --> authorizingPrescription: {item.AuthorizingPrescription.First().Reference}");
+            }
+            else
+            {
+                Console.WriteLine($"Dispense Id: {item.Id} for {item.Subject.Display} is a dispense without prescription (OTC)");
+            }
         }
 
         foreach (var item in prescriptions)
         {
             if (item.BasedOn.Count == 1)
             {
-                Console.WriteLine($"Prescription Id: {item.Id} --> is based on proposal: {item.BasedOn.First().Reference}");
+                Console.WriteLine($"Prescription Id: {item.Id} for {item.Subject.Display} --> is based on proposal: {item.BasedOn.First().Reference}");
             }
             else if (item.PriorPrescription != null) 
             {
-                Console.WriteLine($"Prescription Id: {item.Id} --> refers to prior prescription: {item.PriorPrescription.Reference}");
+                Console.WriteLine($"Prescription Id: {item.Id} for {item.Subject.Display} --> refers to prior prescription: {item.PriorPrescription.Reference}");
             }
             else
             {
-                Console.WriteLine($"Prescription Id: {item.Id} is an initial prescription");
+                Console.WriteLine($"Prescription Id: {item.Id} for {item.Subject.Display} is an initial prescription");
             }
         }
 
@@ -140,11 +149,11 @@ public static class BundleHelper
         {
             if (item.BasedOn.Count == 1)
             {
-                Console.WriteLine($"Proposal Id: {item.Id} --> is based on proposal: {item.BasedOn.First().Reference}");
+                Console.WriteLine($"Proposal Id: {item.Id} for {item.Subject.Display} --> is based on proposal: {item.BasedOn.First().Reference}");
             }
             else
             {
-                Console.WriteLine($"Proposal Id: {item.Id} --> is a starting link");
+                Console.WriteLine($"Proposal Id: {item.Id} for {item.Subject.Display} --> is a starting link");
             }
         }
     }

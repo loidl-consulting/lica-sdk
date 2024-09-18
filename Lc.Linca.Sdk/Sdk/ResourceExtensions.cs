@@ -103,6 +103,12 @@ public static class LincaEndpoints
     public const string audit_events_error = "$audit-events-error";
 
     /// <summary>
+    /// The name of the operation to GET all order chains 
+    /// can only be queried with a special admin certificate
+    /// </summary>
+    public const string all_order_chains = "$all-order-chains";
+
+    /// <summary>
     /// Get the profiled name of a standard Fhir resource
     /// </summary>
     public static string GetProfiledResourceName(this Resource resource)

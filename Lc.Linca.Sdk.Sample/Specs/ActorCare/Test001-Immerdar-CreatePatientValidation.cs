@@ -38,8 +38,9 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             //new("Create client record: multiple LCVALS send empty Patient resource", ClientRecordErrorLCVALMultiple),
             //new("Create client record with success", CreateClientRecord),
             //new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06),
-            new("Get AuditEvents for successful create request", GetAuditEventsCreate),
-            new("Get AuditEvents for erroneous requests", GetAuditEventsError)
+            //new("Get AuditEvents for successful create request", GetAuditEventsCreate),
+            //new("Get AuditEvents for erroneous requests", GetAuditEventsError),
+            new("Get all order chains", GetAllOrderChains)
         };
     }
 
@@ -348,6 +349,19 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
         {
             Console.WriteLine("Audit events documenting errors:");
             BundleHelper.PrintAuditEvents(ae);
+        }
+
+        return canCue;
+    }
+
+    private bool GetAllOrderChains()
+    {
+        string from = DateTime.UtcNow.AddHours(-5).ToString("o", CultureInfo.InvariantCulture);
+        (var result, var canCue) = LincaDataExchange.GetAllOrderChains(Connection, from);
+
+        if (result != null)
+        {
+            BundleHelper.ShowOrderChains(result);
         }
 
         return canCue;

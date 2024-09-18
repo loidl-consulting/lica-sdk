@@ -255,6 +255,22 @@ public static class LincaDataExchange
         return (new(), false);
     }
 
+    /// <summary>
+    /// Get all order chains, plus initial prescriptions, plus OTC dispenses from a given DateTime
+    /// </summary>
+    public static (Bundle results, bool canCue) GetAllOrderChains(LincaConnection connection, string? from)
+    {
+        string operationQuery = CreateOperationQuery(LincaEndpoints.all_order_chains, from, null);
+        (Bundle results, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (results, true);
+        }
+
+        return (new(), false);
+    }
+
     private static string CreateOperationQuery(string operation, string? from, string? thru)
     {
         string operationQuery = $"{operation}";
