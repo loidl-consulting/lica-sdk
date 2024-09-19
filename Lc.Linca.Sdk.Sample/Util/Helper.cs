@@ -221,7 +221,7 @@ public static class BundleHelper
 
         foreach (var prop in initialProposals)
         {
-            Console.WriteLine($"Proposal ID: {prop.Id} Patient: {prop.Subject.Display} " +
+            Console.WriteLine($"Proposal ID: {prop.Id} Recorded: {prop.Meta.LastUpdated} Patient: {prop.Subject.Identifier?.Value}|{prop.Subject.Display} " +
                 $"Medication: {prop.Medication.Concept.Coding.First().Code}|{prop.Medication.Concept.Coding.First().Display} " +
                 $"Quantity: {prop.DispenseRequest?.Quantity?.Value} Dosage: {prop.DosageInstruction?.FirstOrDefault()?.Text}");
 
@@ -261,7 +261,7 @@ public static class BundleHelper
 
         if (initialPrescriptions.Any())
         {
-            Console.WriteLine("ATTENTION INITÌAL PRESCRIPTIONS FOUND");
+            Console.WriteLine("ATTENTION INITIAL PRESCRIPTIONS FOUND");
             foreach (var pres in initialPrescriptions)
             {
                 Console.WriteLine($"Prescrip ID: {pres.Id} Patient: {pres.Subject.Display} " +
@@ -299,7 +299,7 @@ public static class BundleHelper
         {
             Console.WriteLine($"Event record time: {item.Recorded}" +
                 $"\tRequested by: {item.Agent.First().Who.Identifier.Value}" +
-                $"\tDetails: {item.Outcome.Detail.First().Text}");
+                $"\tDetails: {item.Outcome.Detail?.FirstOrDefault()?.Text}");
 
             if (item.Contained != null && item.Contained.Count > 0)
             {
