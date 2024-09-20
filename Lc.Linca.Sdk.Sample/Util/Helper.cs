@@ -309,7 +309,7 @@ public static class BundleHelper
                     {
                         foreach (var issue in outcome.Issue)
                         {
-                            Console.WriteLine($"Issue \tSeverity: {issue.Severity?.ToString()} \tErrortype: {issue.Code} \tErrorcode: {issue.Details.Coding.First().Code} \t{issue.Details.Text}");
+                            Console.WriteLine($"Issue \tSeverity: {issue.Severity?.ToString()} \tErrortype: {issue.Code} \tErrorcode: {issue.Details?.Coding?.FirstOrDefault()?.Code} \t{issue.Details?.Text}");
                         }
                     }
                 }

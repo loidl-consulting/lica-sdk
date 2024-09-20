@@ -325,7 +325,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAuditEventsCreate()
     {
-        string from = DateTime.UtcNow.AddDays(-5).Date.ToString("o", CultureInfo.InvariantCulture);
+        string from = DateTime.UtcNow.AddDays(-2).Date.ToString("o", CultureInfo.InvariantCulture);
         //string thru = DateTime.UtcNow.AddDays(-2).Date.ToString("o", CultureInfo.InvariantCulture);
 
         (var ae, var canCue) = LincaDataExchange.GetAuditEventsCreate(Connection, from, null);
@@ -341,9 +341,9 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAuditEventsError()
     {
-        string from = DateTime.UtcNow.AddDays(-10).Date.ToString("o", CultureInfo.InvariantCulture);
-        string thru = DateTime.UtcNow.AddDays(-1).ToString("o", CultureInfo.InvariantCulture);
-        (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, from, thru);
+        string from = DateTime.UtcNow.AddDays(-2).Date.ToString("o", CultureInfo.InvariantCulture);
+        //string thru = DateTime.UtcNow.AddDays(-1).ToString("o", CultureInfo.InvariantCulture);
+        (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, from, null);
 
         if (ae != null)
         {
@@ -356,7 +356,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAllOrderChains()
     {
-        string from = DateTime.UtcNow.AddDays(-10).ToString("o", CultureInfo.InvariantCulture);
+        string from = DateTime.UtcNow.AddDays(-2).ToString("o", CultureInfo.InvariantCulture);
         (var result, var canCue) = LincaDataExchange.GetAllOrderChains(Connection, from);
 
         if (result != null)
