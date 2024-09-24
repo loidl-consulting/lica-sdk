@@ -237,9 +237,9 @@ public static class BundleHelper
                 var pres = basedOnPrescriptions.FirstOrDefault(p => p.BasedOn.First().Reference.Contains(prop.Id));
                 if (pres != null)
                 {
-                    Console.WriteLine($"Prescrip ID: {pres.Id} Patient: {pres.Subject.Display} " +
+                    Console.WriteLine($"Prescrip ID: {pres.Id} Recorded: {pres.Meta.LastUpdated} Patient: {pres.Subject.Display} " +
                         $"Medication: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
-                        $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text}");
+                        $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text} RezeptID: {pres.GroupIdentifier.Value}");
                     basedOnPrescriptions.Remove(pres);
 
                     var disp = dispenses.FindAll(d => d.AuthorizingPrescription.First().Reference == pres.Id);
@@ -247,7 +247,7 @@ public static class BundleHelper
                     {
                         foreach (var d in  disp)
                         {
-                            Console.WriteLine($"Dispense ID: {d.Id} Patient: {d.Subject.Display} " +
+                            Console.WriteLine($"Dispense ID: {d.Id} Recorded: {d.Meta.LastUpdated} Patient: {d.Subject.Display} " +
                                 $"Medication: {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
                                 $"Quantity: {d.Quantity.Value} Dosage: {d.DosageInstruction.First().Text} " +
                                 $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
@@ -264,19 +264,32 @@ public static class BundleHelper
             Console.WriteLine("ATTENTION INITIAL PRESCRIPTIONS FOUND");
             foreach (var pres in initialPrescriptions)
             {
-                Console.WriteLine($"Prescrip ID: {pres.Id} Patient: {pres.Subject.Display} " +
+                Console.WriteLine($"Prescrip ID: {pres.Id} Recorded: {pres.Meta.LastUpdated} Patient: {pres.Subject.Display} " +
                     $"Medication: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
-                    $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text}");
+                    $"Quantity: {pres.DispenseRequest.Quantity.Value} Dosage: {pres.DosageInstruction.First().Text} RezeptID: {pres.GroupIdentifier.Value}");
             }
             Console.WriteLine("---------------------------------------------------------------------");
         }
 
-        if( otcDispenses.Any() )
+        if (otcDispenses.Any() )
         {
             Console.WriteLine("ATTENTION OTC DISPENSES FOUND");
             foreach (var d in otcDispenses)
             {
-                Console.WriteLine($"Dispense ID: {d.Id} Patient: {d.Subject.Display} " +
+                Console.WriteLine($"Dispense ID: {d.Id} Recorded: {d.Meta.LastUpdated} Patient: {d.Subject.Display} " +
+                    $"Medication: {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
+                    $"Quantity: {d.Quantity.Value} Dosage: {d.DosageInstruction.First().Text} " +
+                    $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
+            }
+            Console.WriteLine("---------------------------------------------------------------------");
+        }
+
+        if (dispenses.Any())
+        {
+            Console.WriteLine("DISCONNECTED DISPENSES FOUND");
+            foreach (var d in dispenses)
+            {
+                Console.WriteLine($"Dispense ID: {d.Id} Recorded: {d.Meta.LastUpdated} Patient: {d.Subject.Display} " +
                     $"Medication: {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
                     $"Quantity: {d.Quantity.Value} Dosage: {d.DosageInstruction.First().Text} " +
                     $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
