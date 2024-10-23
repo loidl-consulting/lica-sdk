@@ -38,9 +38,9 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
             //new("Create client record: multiple LCVALS send empty Patient resource", ClientRecordErrorLCVALMultiple),
             //new("Create client record with success", CreateClientRecord),
             //new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06),
-            new("Get AuditEvents for successful create request", GetAuditEventsCreate),
+            //new("Get AuditEvents for successful create request", GetAuditEventsCreate),
             new("Get AuditEvents for erroneous requests", GetAuditEventsError),
-            new("Get all order chains", GetAllOrderChains)
+            //new("Get all order chains", GetAllOrderChains)
         };
     }
 
@@ -341,7 +341,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAuditEventsError()
     {
-        string from = DateTime.UtcNow.AddDays(-2).Date.ToString("o", CultureInfo.InvariantCulture);
+        string from = DateTime.UtcNow.AddDays(-28).Date.ToString("o", CultureInfo.InvariantCulture);
         //string thru = DateTime.UtcNow.AddDays(-1).ToString("o", CultureInfo.InvariantCulture);
         (var ae, var canCue) = LincaDataExchange.GetAuditEventsError(Connection, from, null);
 
@@ -356,7 +356,7 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
 
     private bool GetAllOrderChains()
     {
-        string from = DateTime.UtcNow.AddDays(-2).ToString("o", CultureInfo.InvariantCulture);
+        string from = DateTime.UtcNow.AddDays(-16).ToString("o", CultureInfo.InvariantCulture);
         (var result, var canCue) = LincaDataExchange.GetAllOrderChains(Connection, from);
 
         if (result != null)

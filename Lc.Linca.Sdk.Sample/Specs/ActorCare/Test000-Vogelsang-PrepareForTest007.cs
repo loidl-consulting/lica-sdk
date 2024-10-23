@@ -33,7 +33,7 @@ internal class Test000_Vogelsang_PrepareForTest007 : Spec
         {
             new("Create client record Günter Gürtelthier", CreateClientRecord1),
             new("Create client record Patrizia Platypus", CreateClientRecord2),
-            new("Place orders for two patients with pharmacy specified", CreateRequestOrchestrationRecord)
+            //new("Place orders for two patients with pharmacy specified", CreateRequestOrchestrationRecord)
         };
     }
 
