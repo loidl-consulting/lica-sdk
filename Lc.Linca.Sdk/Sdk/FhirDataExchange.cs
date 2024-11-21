@@ -68,16 +68,16 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         
         if (response?.IsSuccessStatusCode ?? false)
         {
-            using var getResponse = Receive(connection, response.Headers.Location);
-            response.Dispose();
+            //using var getResponse = Receive(connection, response.Headers.Location);
+            //response.Dispose();
 
-            if (getResponse != null)
-            {
+            if (response /*getResponse*/ != null) 
+            { 
                 var createdResourceRaw = new StreamReader
                 (
-                    getResponse.Content.ReadAsStream()
+                    response.Content.ReadAsStream()
                 ).ReadToEnd();
-
+               
                 if (new FhirJsonPocoDeserializer().TryDeserializeResource
                 (
                     createdResourceRaw,
@@ -204,6 +204,11 @@ internal static class FhirDataExchange<T> where T : Resource, new()
 
         if (response != null)
         {
+            if (response.StatusCode == HttpStatusCode.NoContent) // FhirDeletedResult: Code 204: intentionally blank after successful deletion
+            {
+                return (new(), true);
+            }
+
             var receivedResourceRaw = new StreamReader
             (
                 response.Content.ReadAsStream()
@@ -218,7 +223,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
                 ) 
                 && parsedResource is OperationOutcome receivedResource)
             {
-                if (response?.StatusCode == HttpStatusCode.OK)
+                if (response?.StatusCode == HttpStatusCode.OK) 
                 {
                     return (receivedResource, true);
                 }

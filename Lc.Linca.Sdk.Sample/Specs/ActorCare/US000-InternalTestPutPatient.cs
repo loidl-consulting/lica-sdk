@@ -23,13 +23,15 @@ internal class US000_InternalTestPutPatient : Spec
         Caregivers can create patients with externally assigned ids by sending them with http put";
 
     protected MedicationRequest medReq = new();
+    protected string patientIdToDelete = "";
 
     public US000_InternalTestPutPatient(LincaConnection conn) : base(conn)
     {
         Steps = new Step[]
         {
             new("Create client record with externally assigned id", CreateClientRecord),
-            new("Update client record", UpdateClientRecord)
+            new("Update client record", UpdateClientRecord),
+            new("Delete client record", DeleteClientRecord)
         };
     }
 
@@ -129,6 +131,7 @@ internal class US000_InternalTestPutPatient : Spec
         {
             if (updatedPatient.Id == patient.Id)
             {
+                patientIdToDelete = patient.Id;
                 Console.WriteLine($"Updated client, id {updatedPatient.Id}");
             }
             else
@@ -150,5 +153,29 @@ internal class US000_InternalTestPutPatient : Spec
         }
 
         return canCue;
+    }
+
+    private bool DeleteClientRecord()
+    {
+        (var outcome, var deleted) = LincaDataExchange.DeleteHL7ATCorePatient(Connection, patientIdToDelete);
+
+        if (deleted)
+        {
+            Console.WriteLine($"Client with Id {patientIdToDelete} successfully deleted");
+        }
+        else
+        {
+            Console.WriteLine($"Failed to delete client");
+        }
+
+        if (outcome != null)
+        {
+            foreach (var item in outcome.Issue)
+            {
+                Console.WriteLine($"Outcome Issue Code: '{item.Details.Coding?.FirstOrDefault()?.Code}', Text: '{item.Details.Text}'");
+            }
+        }
+
+        return deleted;
     }
 }
