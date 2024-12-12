@@ -291,7 +291,7 @@ public static class BundleHelper
             {
                 Console.WriteLine($"Dispense ID: {d.Id} Rec: {d.Meta.LastUpdated} Pat: {d.Subject.Identifier?.Value} " +
                     $"Med1. {d.Medication.Concept.Coding.First().Code}|{d.Medication.Concept.Coding.First().Display} " +
-                    $"Qty: {d.Quantity.Value} Dos: {d.DosageInstruction.First().Text} " +
+                    $"Qty: {d.Quantity?.Value} Dos: {d.DosageInstruction.First().Text} " +
                     $"Type: {d.Type.Coding.First().Code} Status: {d.Status}");
             }
             Console.WriteLine("---------------------------------------------------------------------");

@@ -240,6 +240,22 @@ public static class LincaDataExchange
     }
 
     /// <summary>
+    /// Get audit events for successful GET prescription (by eRezID) and GET prescrptions (by OID) requests
+    /// </summary>
+    public static (Bundle results, bool canCue) GetAuditEventsGetPrescr(LincaConnection connection, string? from, string? thru)
+    {
+        string operationQuery = CreateOperationQuery(LincaEndpoints.audit_events_get_prescr, from, thru);
+        (Bundle auditEvents, bool canCue) = FhirDataExchange<Bundle>.GetResource(connection, operationQuery);
+
+        if (canCue)
+        {
+            return (auditEvents, true);
+        }
+
+        return (new(), false);
+    }
+
+    /// <summary>
     /// Get audit events for successful create and delete requests
     /// </summary>
     public static (Bundle results, bool canCue) GetAuditEventsError(LincaConnection connection, string? from, string? thru)

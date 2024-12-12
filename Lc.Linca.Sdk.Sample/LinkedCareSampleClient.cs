@@ -10,7 +10,6 @@
  ***********************************************************************************/
 
 using Lc.Linca.Sdk.Sample.Resources;
-using Lc.Linca.Sdk.Scaffolds;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Lc.Linca.Sdk.Client;
@@ -20,12 +19,8 @@ internal static class LinkedCareSampleClient
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    internal const string FhirServerBaseUrl = "https://fhir5-q.linkedcare.at";
-    //internal const string FhirServerBaseUrl = "https://localhost:8084";
-
-    internal static CareInformationSystem CareInformationSystemScaffold = new();
-    internal static PractitionerInformationSystem PractitionerInformationSystemScaffold = new();
-    internal static PharmacyInformationSystem PharmacyInformationSystemScaffold = new();
+    //internal const string FhirServerBaseUrl = "https://fhir5-q.linkedcare.at";
+    internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     private const string CommandLineArgumentUseEmbeddedCert = "--use-embedded-cert";
     private const int ExitCodeCouldNotConnect = 0xaca1;
@@ -41,7 +36,6 @@ internal static class LinkedCareSampleClient
         {
             do
             {
-                PrintConnectedSequences();
                 var specToRun = SelectSpecToRun();
                 if (specToRun == null)
                 {
@@ -226,12 +220,4 @@ internal static class LinkedCareSampleClient
         return false;
     }
 
-    private static void PrintConnectedSequences()
-    {
-        Console.WriteLine("Folgende Abhängigkeiten bestehen zwischen den Testfällen [00] [07] [08] [09] [10]:");
-        Console.WriteLine("[00] (Zertifikat Haus Vogelsang -> [07] (Zertifikat Dr. Spitzmaus) -> [08] (Zertifikat Dr. Spitzmaus) -> [10] (Apotheke Zum Fruehen Vogel)");
-        Console.WriteLine("[00] (Zertifikat Haus Vogelsang -> [09] (Zertifikat Dr. Spitzmaus)");
-        Console.WriteLine("Alle anderen Testfälle können voneinander unabhängig mit dem entsprechenden Zertifikat ausgeführt werden");
-        Console.WriteLine("");
-    }
 }

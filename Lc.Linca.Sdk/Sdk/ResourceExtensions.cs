@@ -97,6 +97,12 @@ public static class LincaEndpoints
     public const string audit_events_create = "$audit-events-create";
 
     /// <summary>
+    /// The name of the operation to GET AuditEvents of successfull GET prescription/s requests
+    /// can only be queried with a special admin certificate
+    /// </summary>
+    public const string audit_events_get_prescr = "$audit-events-get-prescr";
+
+    /// <summary>
     /// The name of the operation to GET AuditEvents of erroneous requests
     /// can only be queried with a special admin certificate
     /// </summary>
