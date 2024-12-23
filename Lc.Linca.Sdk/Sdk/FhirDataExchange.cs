@@ -68,10 +68,7 @@ internal static class FhirDataExchange<T> where T : Resource, new()
         
         if (response?.IsSuccessStatusCode ?? false)
         {
-            //using var getResponse = Receive(connection, response.Headers.Location);
-            //response.Dispose();
-
-            if (response /*getResponse*/ != null) 
+            if (response != null) 
             { 
                 var createdResourceRaw = new StreamReader
                 (

@@ -51,7 +51,7 @@ internal class US000_InternalTestPutPatient : Spec
         var client = new CareInformationSystem.Client();
         var patient = new Patient
         {
-            Id = Guid.NewGuid().ToFhirId(),
+            Id = Guid.NewGuid().ToFhirId(),     // externally assigned ID
             BirthDate = DateTime.ParseExact(
                 client.DoB,
                 Constants.DobFormat,
