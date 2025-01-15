@@ -19,8 +19,8 @@ internal static class LinkedCareSampleClient
     /// <summary>
     /// In SDK, this always points to the development system
     /// </summary>
-    //internal const string FhirServerBaseUrl = "https://fhir5-q.linkedcare.at";
-    internal const string FhirServerBaseUrl = "https://localhost:8084";
+    internal const string FhirServerBaseUrl = "https://fhir5-q.linkedcare.at";
+    //internal const string FhirServerBaseUrl = "https://localhost:8084";
 
     private const string CommandLineArgumentUseEmbeddedCert = "--use-embedded-cert";
     private const int ExitCodeCouldNotConnect = 0xaca1;

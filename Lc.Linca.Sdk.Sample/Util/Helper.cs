@@ -239,7 +239,7 @@ public static class BundleHelper
                 {
                     Console.WriteLine($"Prescrip ID: {pres.Id} Rec: {pres.Meta.LastUpdated} Pat: {pres.Subject.Identifier?.Value} " + // |{pres.Subject.Display}
                         $"Med: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
-                        $"Qty: {pres.DispenseRequest.Quantity.Value} Dos: {pres.DosageInstruction.First().Text} RezeptID: {pres.GroupIdentifier.Value}");
+                        $"Qty: {pres.DispenseRequest?.Quantity.Value} Dos: {pres.DosageInstruction.FirstOrDefault()?.Text} Status: {pres.Status} RezeptID: {pres.GroupIdentifier?.Value}"); // RezeptID: { pres.GroupIdentifier?.Value}
                     basedOnPrescriptions.Remove(pres);
 
                     var disp = dispenses.FindAll(d => d.AuthorizingPrescription.First().Reference.Contains(pres.Id));
@@ -264,9 +264,9 @@ public static class BundleHelper
             Console.WriteLine("ATTENTION INITIAL PRESCRIPTIONS FOUND");
             foreach (var pres in initialPrescriptions)
             {
-                Console.WriteLine($"Prescrip ID: {pres.Id} Rec: {pres.Meta.LastUpdated} Pat: {pres.Subject.Reference} " +
+                Console.WriteLine($"Prescrip ID: {pres.Id} Rec: {pres.Meta.LastUpdated} Pat: {pres.Subject.Identifier?.Value} " +
                     $"Med: {pres.Medication.Concept.Coding.First().Code}|{pres.Medication.Concept.Coding.First().Display} " +
-                    $"Qty: {pres.DispenseRequest.Quantity.Value} Dos: {pres.DosageInstruction.First().Text} RezeptID: {pres.GroupIdentifier.Value}");
+                    $"Qty: {pres.DispenseRequest.Quantity.Value} Dos: {pres.DosageInstruction.First().Text} RezeptID: {pres.GroupIdentifier.Value}");// RezeptID: {pres.GroupIdentifier.Value}");
             }
             Console.WriteLine("---------------------------------------------------------------------");
         }
@@ -310,7 +310,7 @@ public static class BundleHelper
 
         foreach (var item in ae)
         {
-            Console.WriteLine($"Event record time: {item.Recorded}" +
+            Console.WriteLine($"AuditEvent record time: {item.Recorded}" +
                 $"\tRequested by: {item.Agent.First().Who.Identifier.Value}" +
                 $"\tDetails: {item.Outcome.Detail?.FirstOrDefault()?.Text}");
 
@@ -327,7 +327,7 @@ public static class BundleHelper
                     }
                 }
             }
-            Console.WriteLine("");
+            //Console.WriteLine("");
         }
     }
 }
