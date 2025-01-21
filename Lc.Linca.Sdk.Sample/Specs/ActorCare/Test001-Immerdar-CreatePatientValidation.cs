@@ -30,17 +30,14 @@ internal class Test001_Immerdar_CreatePatientValidation : Spec
     {
         Steps = new Step[]
         {
-            //new("Create client record: LCVAL01 Name.text missing", ClientRecordErrorLCVAL01),
-            //new("Create client record: LCVAL02 svnr not valid", ClientRecordErrorLCVAL02),
-            //new("Create client record: LCVAL03 svnr not unique", ClientRecordErrorLCVAL03),
-            //new("Create client record: LCVAL04 birthdate and svnr missing", ClientRecordErrorLCVAL04),
-            //new("Create client record: LCVAL05 gender missing", ClientRecordErrorLCVAL05),
-            //new("Create client record: multiple LCVALS send empty Patient resource", ClientRecordErrorLCVALMultiple),
-            //new("Create client record with success", CreateClientRecord),
-            //new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06),
-            new("Get AuditEvents for successful create request", GetAuditEventsCreate),
-            new("Get AuditEvents for erroneous requests", GetAuditEventsError),
-            new("Get all order chains", GetAllOrderChains)
+            new("Create client record: LCVAL01 Name.text missing", ClientRecordErrorLCVAL01),
+            new("Create client record: LCVAL02 svnr not valid", ClientRecordErrorLCVAL02),
+            new("Create client record: LCVAL03 svnr not unique", ClientRecordErrorLCVAL03),
+            new("Create client record: LCVAL04 birthdate and svnr missing", ClientRecordErrorLCVAL04),
+            new("Create client record: LCVAL05 gender missing", ClientRecordErrorLCVAL05),
+            new("Create client record: multiple LCVALS send empty Patient resource", ClientRecordErrorLCVALMultiple),
+            new("Create client record with success", CreateClientRecord),
+            new("Create client record, LCVAL06 cast failed", CreateClientRecordLCVAL06)
         };
     }
 
